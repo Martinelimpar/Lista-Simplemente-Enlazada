@@ -3,59 +3,55 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Random;
 
-public class MiLista implements ListInterface{
+public class MiLista implements ListInterface {
 
-    ListNode cabeza = null;;
+    ListNode cabeza = null;
 
     @Override
-    public boolean isEmpty() {
-        return cabeza == null;
-    }
+    public boolean isEmpty() { return cabeza == null; }
 
     @Override
     public int getSize() {
-        ListNode iterador = this.cabeza;
         int contador = 0;
-        while (iterador.siguiente != null){
-            iterador = iterador.siguiente;
-            contador = contador + 1;
+        ListNode actual = cabeza;
+        while (actual != null) {
+            contador++;
+            actual = actual.siguiente;
         }
         return contador;
     }
 
     @Override
-    public void clear() {
-        cabeza = null;
-    }
+    public void clear() { cabeza = null; }
 
     @Override
     public Object getHead() {
-        return  cabeza == null ? null : cabeza.dato;
+        return cabeza == null ? null : cabeza.dato;
     }
 
     @Override
     public Object getTail() {
-       if (cabeza == null) return  null;
-       ListNode actual = cabeza;
-       while (actual.siguiente != null) actual = actual.siguiente;
-       return actual.dato;
+        if (cabeza == null) return null;
+        ListNode actual = cabeza;
+        while (actual.siguiente != null) actual = actual.siguiente;
+        return actual.dato;
     }
 
     @Override
     public Object get(ListNode node) {
-        if ( node == null) return null;
+        if (node == null) return null;
         ListNode actual = cabeza;
         while (actual != null) {
             if (actual == node) return actual.dato;
-        actual = actual.siguiente;
+            actual = actual.siguiente;
         }
-        return  null;
+        return null;
     }
 
     @Override
     public Object search(Object object) {
         ListNode actual = cabeza;
-        while ( actual != null) {
+        while (actual != null) {
             if (Objects.equals(actual.dato, object)) return actual.dato;
             actual = actual.siguiente;
         }
@@ -63,13 +59,11 @@ public class MiLista implements ListInterface{
     }
 
     @Override
-    public boolean add(Object object) {
-        return insertTail(object);
-    }
+    public boolean add(Object object) { return insertTail(object); }
 
     @Override
     public boolean insert(ListNode node, Object object) {
-        if ( node == null) return false;
+        if (node == null) return false;
         ListNode actual = cabeza;
         while (actual != null) {
             if (actual == node) {
@@ -86,8 +80,8 @@ public class MiLista implements ListInterface{
     @Override
     public boolean insert(Object ob, Object object) {
         ListNode actual = cabeza;
-        while ( actual != null) {
-            if (Objects.equals(actual.dato,ob))return insert(actual,object);
+        while (actual != null) {
+            if (Objects.equals(actual.dato, ob)) return insert(actual, object);
             actual = actual.siguiente;
         }
         return false;
@@ -95,41 +89,28 @@ public class MiLista implements ListInterface{
 
     @Override
     public boolean insertHead(Object object) {
-        try {
-            // 1er paso: Crear el nuevo nodo con la información recibida
-            ListNode nuevaCabeza = new ListNode(object);
-            //2do paso: Conectar el nodo a la cabeza
-            nuevaCabeza.siguiente = this.cabeza;
-            //3er paso: redefinir la cabeza
-            this.cabeza = nuevaCabeza;
-            return true;
-        } catch (Exception e){
-            System.out.println("Ocurrió un error");
-            return false;
-        }
+        ListNode nuevo = new ListNode(object);
+        nuevo.siguiente = cabeza;
+        cabeza = nuevo;
+        return true;
     }
 
     @Override
     public boolean insertTail(Object object) {
-        if(this.cabeza == null){
-            ListNode nuevaCabeza = new ListNode(object);
-            this.cabeza = nuevaCabeza;
-        }else {
-            ListNode nuevaCola = new ListNode(object);
-            ListNode iterador = this.cabeza;
-            while (iterador.siguiente != null) {
-                iterador = iterador.siguiente;
-
-            }
-            iterador.siguiente = nuevaCola;
+        ListNode nuevo = new ListNode(object);
+        if (cabeza == null) {
+            cabeza = nuevo;
+            return true;
         }
+        ListNode actual = cabeza;
+        while (actual.siguiente != null) actual = actual.siguiente;
+        actual.siguiente = nuevo;
         return true;
-
     }
 
     @Override
     public boolean set(ListNode node, Object object) {
-        if ( node == null) return false;
+        if (node == null) return false;
         ListNode actual = cabeza;
         while (actual != null) {
             if (actual == node) {
@@ -160,19 +141,15 @@ public class MiLista implements ListInterface{
     }
 
     @Override
-    public boolean contains(Object object) {
-        return search(object) != null;
-    }
+    public boolean contains(Object object) { return search(object) != null; }
 
     @Override
     public Iterator<ListNode> iterator() {
-        return  new Iterator<ListNode>() {
+        return new Iterator<ListNode>() {
             private ListNode actual = cabeza;
 
             @Override
-            public boolean hasNext() {
-                return actual != null;
-            }
+            public boolean hasNext() { return actual != null; }
 
             @Override
             public ListNode next() {
@@ -181,6 +158,7 @@ public class MiLista implements ListInterface{
                 actual = actual.siguiente;
                 return resultado;
             }
+
             @Override
             public void remove() {
                 throw new UnsupportedOperationException();
@@ -216,7 +194,7 @@ public class MiLista implements ListInterface{
 
     @Override
     public Object getBeforeTo() {
-        return cabeza == null ? null : getBeforeTo(cabeza); //buscar el segundo
+        return cabeza == null ? null : getBeforeTo(cabeza);
     }
 
     @Override
@@ -237,7 +215,7 @@ public class MiLista implements ListInterface{
 
     @Override
     public Object getNextTo(ListNode node) {
-        if ( node == null) return null;
+        if (node == null) return null;
         ListNode actual = cabeza;
         while (actual != null) {
             if (actual == node) return actual.siguiente == null ? null : actual.siguiente.dato;
@@ -255,9 +233,10 @@ public class MiLista implements ListInterface{
         boolean inicio = false;
 
         while (actual != null) {
-            if(actual == from) inicio = true;
-            if(inicio) resultado.insertTail(actual.dato);
-            if(actual == to) return  resultado;
+            if (actual == from) inicio = true;
+            if (inicio) resultado.insertTail(actual.dato);
+            if (actual == to) return resultado;
+            actual = actual.siguiente;
         }
         return new MiLista();
     }
@@ -293,6 +272,7 @@ public class MiLista implements ListInterface{
         if (anterior == null) lista.cabeza = nuevo;
         else anterior.siguiente = nuevo;
     }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private int comparar(Object a, Object b) {
         if (a == b) return 0;
